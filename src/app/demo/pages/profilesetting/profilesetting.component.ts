@@ -430,53 +430,6 @@ export class ProfilesettingComponent {
   }
   //#endregion
 
-  onChangeDefaultTime() {
-    let getValueFrom = this.ProfileFormGroup.controls['monFromTime'].value;
-    let getValueTo = this.ProfileFormGroup.controls['monToTime'].value;
-
-    this.ChkMakeDefaultTime = !this.ChkMakeDefaultTime;
-
-    if (this.ChkMakeDefaultTime) {
-      this.ProfileFormGroup.controls['tueFromTime'].disable();
-      this.ProfileFormGroup.controls['tueToTime'].disable();
-      this.ProfileFormGroup.controls['wedFromTime'].disable();
-      this.ProfileFormGroup.controls['wedToTime'].disable();
-      this.ProfileFormGroup.controls['thuFromTime'].disable();
-      this.ProfileFormGroup.controls['thuToTime'].disable();
-      this.ProfileFormGroup.controls['friFromTime'].disable();
-      this.ProfileFormGroup.controls['friToTime'].disable();
-      this.ProfileFormGroup.controls['satFromTime'].disable();
-      this.ProfileFormGroup.controls['satToTime'].disable();
-      this.ProfileFormGroup.controls['sunFromTime'].disable();
-      this.ProfileFormGroup.controls['sunToTime'].disable();
-    }
-    else if (!this.ChkMakeDefaultTime) {
-      this.ProfileFormGroup.controls['tueFromTime'].enable();
-      this.ProfileFormGroup.controls['tueToTime'].enable();
-      this.ProfileFormGroup.controls['wedFromTime'].enable();
-      this.ProfileFormGroup.controls['wedToTime'].enable();
-      this.ProfileFormGroup.controls['thuFromTime'].enable();
-      this.ProfileFormGroup.controls['thuToTime'].enable();
-      this.ProfileFormGroup.controls['friFromTime'].enable();
-      this.ProfileFormGroup.controls['friToTime'].enable();
-      this.ProfileFormGroup.controls['satFromTime'].enable();
-      this.ProfileFormGroup.controls['satToTime'].enable();
-      this.ProfileFormGroup.controls['sunFromTime'].enable();
-      this.ProfileFormGroup.controls['sunToTime'].enable();
-    }
-    this.ProfileFormGroup.controls['tueFromTime'].setValue(getValueFrom);
-    this.ProfileFormGroup.controls['tueToTime'].setValue(getValueTo);
-    this.ProfileFormGroup.controls['wedFromTime'].setValue(getValueFrom);
-    this.ProfileFormGroup.controls['wedToTime'].setValue(getValueTo);
-    this.ProfileFormGroup.controls['thuFromTime'].setValue(getValueFrom);
-    this.ProfileFormGroup.controls['thuToTime'].setValue(getValueTo);
-    this.ProfileFormGroup.controls['friFromTime'].setValue(getValueFrom);
-    this.ProfileFormGroup.controls['friToTime'].setValue(getValueTo);
-    this.ProfileFormGroup.controls['satFromTime'].setValue(getValueFrom);
-    this.ProfileFormGroup.controls['satToTime'].setValue(getValueTo);
-    this.ProfileFormGroup.controls['sunFromTime'].setValue(getValueFrom);
-    this.ProfileFormGroup.controls['sunToTime'].setValue(getValueTo);
-  }
 
   getStates() {
     this.stateService.GetStates().subscribe({
@@ -779,6 +732,54 @@ export class ProfilesettingComponent {
           this.submitted = false;
         }
       });
+  }
+
+  onChangeDefaultTime() {
+    let getValueFrom = this.ProfileFormGroup.controls['monFromTime'].value;
+    let getValueTo = this.ProfileFormGroup.controls['monToTime'].value;
+
+    this.ChkMakeDefaultTime = !this.ChkMakeDefaultTime;
+
+    if (this.ChkMakeDefaultTime) {
+      this.ProfileFormGroup.controls['tueFromTime'].disable();
+      this.ProfileFormGroup.controls['tueToTime'].disable();
+      this.ProfileFormGroup.controls['wedFromTime'].disable();
+      this.ProfileFormGroup.controls['wedToTime'].disable();
+      this.ProfileFormGroup.controls['thuFromTime'].disable();
+      this.ProfileFormGroup.controls['thuToTime'].disable();
+      this.ProfileFormGroup.controls['friFromTime'].disable();
+      this.ProfileFormGroup.controls['friToTime'].disable();
+      this.ProfileFormGroup.controls['satFromTime'].disable();
+      this.ProfileFormGroup.controls['satToTime'].disable();
+      this.ProfileFormGroup.controls['sunFromTime'].disable();
+      this.ProfileFormGroup.controls['sunToTime'].disable();
+    }
+    else if (!this.ChkMakeDefaultTime) {
+      this.ProfileFormGroup.controls['tueFromTime'].enable();
+      this.ProfileFormGroup.controls['tueToTime'].enable();
+      this.ProfileFormGroup.controls['wedFromTime'].enable();
+      this.ProfileFormGroup.controls['wedToTime'].enable();
+      this.ProfileFormGroup.controls['thuFromTime'].enable();
+      this.ProfileFormGroup.controls['thuToTime'].enable();
+      this.ProfileFormGroup.controls['friFromTime'].enable();
+      this.ProfileFormGroup.controls['friToTime'].enable();
+      this.ProfileFormGroup.controls['satFromTime'].enable();
+      this.ProfileFormGroup.controls['satToTime'].enable();
+      this.ProfileFormGroup.controls['sunFromTime'].enable();
+      this.ProfileFormGroup.controls['sunToTime'].enable();
+    }
+    this.ProfileFormGroup.controls['tueFromTime'].setValue(getValueFrom);
+    this.ProfileFormGroup.controls['tueToTime'].setValue(getValueTo);
+    this.ProfileFormGroup.controls['wedFromTime'].setValue(getValueFrom);
+    this.ProfileFormGroup.controls['wedToTime'].setValue(getValueTo);
+    this.ProfileFormGroup.controls['thuFromTime'].setValue(getValueFrom);
+    this.ProfileFormGroup.controls['thuToTime'].setValue(getValueTo);
+    this.ProfileFormGroup.controls['friFromTime'].setValue(getValueFrom);
+    this.ProfileFormGroup.controls['friToTime'].setValue(getValueTo);
+    this.ProfileFormGroup.controls['satFromTime'].setValue(getValueFrom);
+    this.ProfileFormGroup.controls['satToTime'].setValue(getValueTo);
+    this.ProfileFormGroup.controls['sunFromTime'].setValue(getValueFrom);
+    this.ProfileFormGroup.controls['sunToTime'].setValue(getValueTo);
   }
 
   // search Google Maps....
