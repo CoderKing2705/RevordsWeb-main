@@ -68,8 +68,8 @@
                             Legal Name
                         </label>
                         <input id="businessName" class="form-control" formControlName="businessName" autocomplete="off"
-                            [ngClass]="{ 'is-invalid': secondStepSubmitted && ProfileFormGroup.controls['businessName'].errors }">
-                        <div *ngIf="secondStepSubmitted && ProfileFormGroup.controls['businessName'].errors"
+                            [ngClass]="{ 'is-invalid': submitted && ProfileFormGroup.controls['businessName'].errors }">
+                        <div *ngIf="submitted && ProfileFormGroup.controls['businessName'].errors"
                             class="invalid-feedback">
                             <div *ngIf="ProfileFormGroup.controls['businessName'].errors['required']">
                                 Business Name is required
@@ -82,8 +82,8 @@
                             Display Name
                         </label>
                         <input id="shortName" class="form-control" formControlName="shortName" autocomplete="off"
-                            [ngClass]="{ 'is-invalid': secondStepSubmitted && ProfileFormGroup.controls['shortName'].errors }">
-                        <div *ngIf="secondStepSubmitted && ProfileFormGroup.controls['shortName'].errors"
+                            [ngClass]="{ 'is-invalid': submitted && ProfileFormGroup.controls['shortName'].errors }">
+                        <div *ngIf="submitted && ProfileFormGroup.controls['shortName'].errors"
                             class="invalid-feedback">
                             <div *ngIf="ProfileFormGroup.controls['shortName'].errors['required']">
                                 Business Short Name is required
@@ -97,9 +97,8 @@
                         </label>
                         <input id="phoneNo" class="form-control" formControlName="phoneNo" autocomplete="off"
                             (keypress)="numberOnly($event)" maxlength="10"
-                            [ngClass]="{ 'is-invalid': secondStepSubmitted && ProfileFormGroup.controls['phoneNo'].errors }">
-                        <div *ngIf="secondStepSubmitted && ProfileFormGroup.controls['phoneNo'].errors"
-                            class="invalid-feedback">
+                            [ngClass]="{ 'is-invalid': submitted && ProfileFormGroup.controls['phoneNo'].errors }">
+                        <div *ngIf="submitted && ProfileFormGroup.controls['phoneNo'].errors" class="invalid-feedback">
                             <div *ngIf="ProfileFormGroup.controls['phoneNo'].errors['required']">
                                 Phone No is required
                             </div>
@@ -113,11 +112,10 @@
                         </label>
                         <input #search id="address" type="text" class="form-control" formControlName="address"
                             autocomplete="off" spellcheck="off" autocapitalize="off" autocorrect="off"
-                            [ngClass]="{ 'is-invalid': secondStepSubmitted && ProfileFormGroup.controls['address'].errors }"
+                            [ngClass]="{ 'is-invalid': submitted && ProfileFormGroup.controls['address'].errors }"
                             placeholder="Search location" (input)="initAutocomplete()" />
 
-                        <div *ngIf="secondStepSubmitted && ProfileFormGroup.controls['address'].errors"
-                            class="invalid-feedback">
+                        <div *ngIf="submitted && ProfileFormGroup.controls['address'].errors" class="invalid-feedback">
                             <div *ngIf="ProfileFormGroup.controls['address'].errors['required']">
                                 Address is required
                             </div>
@@ -128,9 +126,8 @@
                             City
                         </label>
                         <input id="city" class="form-control" formControlName="city" autocomplete="off"
-                            [ngClass]="{ 'is-invalid': secondStepSubmitted && ProfileFormGroup.controls['city'].errors }">
-                        <div *ngIf="secondStepSubmitted && ProfileFormGroup.controls['city'].errors"
-                            class="invalid-feedback">
+                            [ngClass]="{ 'is-invalid': submitted && ProfileFormGroup.controls['city'].errors }">
+                        <div *ngIf="submitted && ProfileFormGroup.controls['city'].errors" class="invalid-feedback">
                             <div *ngIf="ProfileFormGroup.controls['city'].errors['required']">
                                 City is required
                             </div>
@@ -144,8 +141,7 @@
                         <ng-multiselect-dropdown [placeholder]="'Select State'" id="stateCodeId"
                             [settings]="dropdownSettingsSingleState" [data]="statesData" formControlName="stateCodeId">
                         </ng-multiselect-dropdown>
-                        <div style="width:100%;"
-                            *ngIf="secondStepSubmitted && ProfileFormGroup.controls['stateCodeId'].errors"
+                        <div style="width:100%;" *ngIf="submitted && ProfileFormGroup.controls['stateCodeId'].errors"
                             class="invalid-feedback">
                             <div *ngIf="ProfileFormGroup.controls['stateCodeId'].errors['required']">
                                 State is required
@@ -159,9 +155,8 @@
                         </label>
                         <input id="pinCode" class="form-control" formControlName="pinCode" autocomplete="off"
                             maxlength="6" (keypress)="numberOnly($event)"
-                            [ngClass]="{ 'is-invalid': secondStepSubmitted && ProfileFormGroup.controls['pinCode'].errors }">
-                        <div *ngIf="secondStepSubmitted && ProfileFormGroup.controls['pinCode'].errors"
-                            class="invalid-feedback">
+                            [ngClass]="{ 'is-invalid': submitted && ProfileFormGroup.controls['pinCode'].errors }">
+                        <div *ngIf="submitted && ProfileFormGroup.controls['pinCode'].errors" class="invalid-feedback">
                             <div *ngIf="ProfileFormGroup.controls['pinCode'].errors['required']">
                                 Pincode is required
                             </div>

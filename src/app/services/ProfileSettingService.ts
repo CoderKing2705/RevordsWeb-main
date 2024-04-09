@@ -20,6 +20,7 @@ export class ProfileSettingService {
     public GetBusinessProfilesByID(id) {
         return this._http.get<any>(this.apiUrl + id)
             .pipe(map(data => {
+                console.log(data)
                 return data;
             }));
     }

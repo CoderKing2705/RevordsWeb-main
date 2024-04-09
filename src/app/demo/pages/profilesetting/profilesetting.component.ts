@@ -1,11 +1,8 @@
 import { Component, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { ProfileSettingService } from '../../../services/ProfileSettingService';
 import { StateService } from '../../../services/StateService';
-import { stat } from 'fs';
 import { BusinessLabelService } from '../../../services/businessLabelService';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators'
 import { Subscription } from 'rxjs';
 import { FileUploadService } from '../../../services/fileuploadservie';
 import { HttpEventType } from '@angular/common/http';
@@ -14,6 +11,7 @@ import { ToastService } from '../../../services/ToastService';
 import * as moment from "moment";
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { GoogleMapsService } from '../../../services/google-maps.service'
+import { PromotionService } from 'src/app/services/PromotionService';
 
 @Component({
   selector: 'app-profilesetting',
@@ -37,7 +35,6 @@ export class ProfilesettingComponent {
   latitude: any;
   longitude: any;
   uniqueId: any;
-  id: any;
   dataSource: any;
   labels: any;
   iseditmode: any = false;
@@ -116,7 +113,7 @@ export class ProfilesettingComponent {
   //#endregion
 
   constructor(private profileSettingService: ProfileSettingService, private stateService: StateService,
-    private businessLabelService: BusinessLabelService, private uploadService: FileUploadService,
+    private businessLabelService: BusinessLabelService, private uploadService: PromotionService,
     public toastService: ToastService, private googleMapsService: GoogleMapsService, private ngZone: NgZone) {
     this.businessGroupID = JSON.parse(localStorage.getItem('BusinessGroup'));
     this.ProfileFormGroup = new FormGroup({
@@ -127,7 +124,6 @@ export class ProfilesettingComponent {
       stateCodeId: new FormControl('', Validators.required),
       phoneNo: new FormControl('', Validators.required),
       pinCode: new FormControl('', Validators.required),
-      industry: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
       label: new FormControl(''),
       website: new FormControl(''),
@@ -174,7 +170,8 @@ export class ProfilesettingComponent {
 
     if (this.fileBusinessLogo) {
       this.loadingBusinessLogo = true;
-      this.uploadSubBusinessLogo = this.uploadService.uploadBusinessImage(this.fileBusinessLogo).subscribe((event: any) => {
+      this.uploadSubBusinessLogo = this.uploadService.uploadFile(this.fileBusinessLogo).subscribe((event: any) => {
+        console.log(event);
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgressBusinessLogo = Math.round(100 * (event.loaded / event.total)).toString() + "%";
         }
@@ -218,7 +215,7 @@ export class ProfilesettingComponent {
 
     if (this.fileBusinessDisplayImage) {
       this.loadingBusinessDisplayImage = true;
-      this.uploadSubBusinessDisplayImage = this.uploadService.uploadBusinessImage(this.fileBusinessDisplayImage).subscribe((event: any) => {
+      this.uploadSubBusinessDisplayImage = this.uploadService.uploadFile(this.fileBusinessDisplayImage).subscribe((event: any) => {
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgressBusinessDisplayImage = Math.round(100 * (event.loaded / event.total)).toString() + "%";
         }
@@ -263,7 +260,7 @@ export class ProfilesettingComponent {
 
     if (this.fileBusinessImage1) {
       this.loadingBusinessImage1 = true;
-      this.uploadSubBusinessImage1 = this.uploadService.uploadBusinessImage(this.fileBusinessImage1).subscribe((event: any) => {
+      this.uploadSubBusinessImage1 = this.uploadService.uploadFile(this.fileBusinessImage1).subscribe((event: any) => {
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgressBusinessImage1 = Math.round(100 * (event.loaded / event.total)).toString() + "%";
         }
@@ -307,7 +304,7 @@ export class ProfilesettingComponent {
 
     if (this.fileBusinessImage2) {
       this.loadingBusinessImage2 = true;
-      this.uploadSubBusinessImage2 = this.uploadService.uploadBusinessImage(this.fileBusinessImage2).subscribe((event: any) => {
+      this.uploadSubBusinessImage2 = this.uploadService.uploadFile(this.fileBusinessImage2).subscribe((event: any) => {
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgressBusinessImage2 = Math.round(100 * (event.loaded / event.total)).toString() + "%";
         }
@@ -351,7 +348,7 @@ export class ProfilesettingComponent {
 
     if (this.fileBusinessImage3) {
       this.loadingBusinessImage3 = true;
-      this.uploadSubBusinessImage3 = this.uploadService.uploadBusinessImage(this.fileBusinessImage3).subscribe((event: any) => {
+      this.uploadSubBusinessImage3 = this.uploadService.uploadFile(this.fileBusinessImage3).subscribe((event: any) => {
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgressBusinessImage3 = Math.round(100 * (event.loaded / event.total)).toString() + "%";
         }
@@ -395,7 +392,7 @@ export class ProfilesettingComponent {
 
     if (this.fileBusinessImage4) {
       this.loadingBusinessImage4 = true;
-      this.uploadSubBusinessImage4 = this.uploadService.uploadBusinessImage(this.fileBusinessImage4).subscribe((event: any) => {
+      this.uploadSubBusinessImage4 = this.uploadService.uploadFile(this.fileBusinessImage4).subscribe((event: any) => {
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgressBusinessImage4 = Math.round(100 * (event.loaded / event.total)).toString() + "%";
         }
@@ -580,6 +577,21 @@ export class ProfilesettingComponent {
     })
   }
 
+  selectBusiness(id: any) {
+    if (this.selectedBusiness.length == 5) {
+      this.toastService.show("You can select upto 5 Business labels only !")
+      return;
+    }
+
+    if (this.selectedBusiness.filter(x => x.id == id).length == 0) {
+      this.ProfileFormGroup.controls['label'].setValue('');
+      this.selectedBusiness.push({
+        id: id,
+        name: this.businessLabels.filter(x => x.id == id)[0].name
+      })
+    }
+  }
+
   GetBusinessLabelsForEdit(data: any) {
     let details = [];
     data.forEach((element: any) => {
@@ -698,7 +710,9 @@ export class ProfilesettingComponent {
   Submit() {
     this.submitted = true;
     console.log(this.ProfileFormGroup.invalid);
+    // console.log(this.ProfileFormGroup.valid);
     if (this.ProfileFormGroup.invalid) {
+      console.log(this.ProfileFormGroup.controls)
       return;
     }
 
@@ -709,14 +723,14 @@ export class ProfilesettingComponent {
     console.log("out")
     this.isLoading = true;
     let details = {
-      "uniqueId": this.uniqueId,
-      "id": this.id,
+      "uniqueId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "id": this.businessLocationID,
       "legalName": this.ProfileFormGroup.controls['businessName'].value,
       "businessName": this.ProfileFormGroup.controls['shortName'].value,
       "adress": this.ProfileFormGroup.controls['address'].value,
       "phoneNo": this.ProfileFormGroup.controls['phoneNo'].value,
       "pinCode": this.ProfileFormGroup.controls['pinCode'].value,
-      "industry": this.ProfileFormGroup.controls['industry'].value,
+      "industry": this.industry,
       "descriptions": this.ProfileFormGroup.controls['description'].value,
       "logoPath": this.fileNameBusinessLogo,
       "imagePath": this.fileNameBusinessDisplayImage,
@@ -728,14 +742,14 @@ export class ProfilesettingComponent {
       "latitude": this.latitude,
       "longitude": this.longitude,
       "yelpUrl": this.ProfileFormGroup.controls['yelpUrl'].value,
-      "stateId": 0,
+      "stateId": 3,
       "isActive": true,
       "businessGroupId": this.businessGroupID.id,
       "createdBy": AppSettings.GetCreatedBy(),
       "createdDate": AppSettings.GetDate(),
       "lastModifiedBy": AppSettings.GetCreatedBy(),
       "lastModifiedDate": AppSettings.GetDate(),
-      "stateCodeID": this.ProfileFormGroup.controls['stateCodeId'].value,
+      "stateCodeID": this.ProfileFormGroup.controls['stateCodeId'].value[0].id,
       "city": this.ProfileFormGroup.controls['city'].value,
       "businesswiseLabels": this.GetBusinessLabels(),
       "businesswiseWorkingDays": this.GetBusinessWorkingHours(),
@@ -751,6 +765,7 @@ export class ProfilesettingComponent {
     this.profileSettingService.PutBusinessProfile(details.id, details)
       .subscribe({
         next: (data) => {
+          console.log("In_bc")
           this.isLoading = false;
           this.submitted = false;
           this.iseditmode = false;
@@ -764,8 +779,6 @@ export class ProfilesettingComponent {
           this.submitted = false;
         }
       });
-
-      console.log("Submitted")
   }
 
   // search Google Maps....
