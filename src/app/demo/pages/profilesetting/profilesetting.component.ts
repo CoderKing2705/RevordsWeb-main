@@ -635,11 +635,6 @@ export class ProfilesettingComponent {
     })
   }
 
-  selectState(state: any) {
-    // document.getElementById("dLabel").innerText = state.name;
-    this.ProfileFormGroup.controls['stateCodeId'].setValue(state.id)
-  }
-
   businessLabelOnChange() {
     if (this.ProfileFormGroup.controls["label"].value.length >= 2) {
       this.filteredBusiness = this.filteredBusiness.filter(x => x.name.toLowerCase().includes(this.ProfileFormGroup.controls['label'].value.toLowerCase()));
@@ -648,21 +643,6 @@ export class ProfilesettingComponent {
       this.filteredBusiness = this.businessLabels;
     }
   }
-
-  selectBusiness(id: any) {
-    if (this.selectedBusiness.filter(x => x.id == id).length == 0) {
-      this.ProfileFormGroup.controls['label'].setValue('');
-      this.selectedBusiness.push({
-        id: id,
-        name: this.businessLabels.filter(x => x.id == id)[0].name
-      })
-    }
-  }
-
-  removeBusiness(id: any) {
-    this.selectedBusiness = this.selectedBusiness.filter(x => x.id != id);
-  }
-
 
   GetBusinessLabels() {
     let details = [];
@@ -784,6 +764,8 @@ export class ProfilesettingComponent {
           this.submitted = false;
         }
       });
+
+      console.log("Submitted")
   }
 
   // search Google Maps....
