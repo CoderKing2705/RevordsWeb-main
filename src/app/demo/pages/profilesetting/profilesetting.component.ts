@@ -795,6 +795,12 @@ export class ProfilesettingComponent {
           this.ProfileFormGroup.controls['address'].setValue(this.searchElementRef.nativeElement.value);
         });
       });
+
+      this.searchElementRef.nativeElement.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+      })
     });
   }
 }
