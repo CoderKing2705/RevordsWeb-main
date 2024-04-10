@@ -616,7 +616,7 @@ export class ProfilesettingComponent {
         "uniqueID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         "id": 0,
         "labelID": element.id,
-        "businessID": this.businessID,
+        "businessID": this.businessLocationID,
         "isActive": true,
         "createdBy": AppSettings.GetCreatedBy(),
         "createdDate": AppSettings.GetDate(),
@@ -634,7 +634,7 @@ export class ProfilesettingComponent {
     let tempdefDetails = {
       "uniqueId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "id": 0,
-      "businessId": this.businessID,
+      "businessId": this.businessLocationID,
       "monFromTime": this.ProfileFormGroup.controls['monFromTime'].value,
       "monToTime": this.ProfileFormGroup.controls['monToTime'].value,
       "tueFromTime": this.ProfileFormGroup.controls['tueFromTime'].value,
