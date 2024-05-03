@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { HttpEventType } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -52,11 +52,15 @@ export class PromotionComponent {
   icon: 'fa-edit';
   isLoadingSaveData = false;
   location: string = "";
+  LatestSMSstatus = "";
+  LatestSMSstatus2 = "";
+  SMSStatus = "";
   businessLocationIDs: string = "";
+  errorMessage: string = "";
   config: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
-    height: '15rem',
+    height: '8rem',
     minHeight: '5rem',
     placeholder: 'Enter text here...',
     translate: 'no',
@@ -83,7 +87,7 @@ export class PromotionComponent {
   };
   subjectCharacterCount1: number = 50;
   subjectCharacterCount2: number = 50;
-  descriptionCharacterCount: number = 145;
+  descriptionCharacterCount: number = 1200;
   showSendBtn: boolean = false;
   showPromo2: boolean = false;
   IsPriviewAvailable = true;
@@ -228,13 +232,16 @@ export class PromotionComponent {
   draftPromo: any = [];
   filtereddata: any = [];
   isSpinRequired: any;
-  allowedWords = [{ text: 'beer', reward: 'beverages' }, { text: 'wine', reward: 'beverages' },
+  allowedWords = [{ text: 'friend', reward: 'bring a friend' }, { text: 'beer', reward: 'beverages' }, { text: 'wine', reward: 'beverages' },
   { text: 'drinks', reward: 'beverages' }, { text: 'off', reward: '$ off' }, { text: '%', reward: 'discount' },
   { text: 'offer', reward: 'exciting offer' }, { text: 'gift card', reward: 'dollar' },
   { text: '$', reward: 'dollar' }, { text: 'buy one get', reward: 'BOGO' }, { text: 'bogo', reward: 'BOGO' },
   { text: 'free', reward: 'free item' }, { text: 'spinwheel', reward: 'Spin wheel' }]
+
   @ViewChild('select') select: MatSelect;
   @ViewChild('editor') editor;
+  // @ViewChild('exampleModal') modal: ElementRef;
+
   dropdownSettings: IDropdownSettings = {};
   dropdownSettingsSingle: IDropdownSettings = {};
   constructor(private _liveAnnouncer: LiveAnnouncer, private _promotionService: PromotionService,
@@ -296,11 +303,12 @@ export class PromotionComponent {
           localStorage.setItem("OPTS", JSON.stringify(this._defaultOpts));
         },
         error: error => {
-          console.log(error);
+
         }
       });
   }
   async setBusiness() {
+
     let data = JSON.parse(localStorage.getItem('Business'));
     this.bussinessDataForStep3 = [];
     this.bussinessDataForRedemption = [];
@@ -315,7 +323,7 @@ export class PromotionComponent {
         id: element.id,
         businessName: element.businessName,
         checked: false,
-        memberCount: this.membersData != null && this.membersData != undefined && this.membersData.length > 0 ? this.membersData.filter(x => x.id == element.id)[0].count : 0
+        memberCount: this.membersData != null && this.membersData != undefined && this.membersData.length > 0 ? (this.membersData.filter(x => x.id == element.id).length > 0 ? this.membersData.filter(x => x.id == element.id)[0].count : 0) : 0
       });
     });
     this.bussinessDataForStep3 = this.bussinessDataForRedemption;
@@ -325,6 +333,7 @@ export class PromotionComponent {
     this.GetPromotions();
     this.GetMembersData();
     this.setSpinWheelData();
+    this.GetLastSMSDetails();
     this.dropdownSettings = {
       idField: 'id',
       textField: 'businessName',
@@ -360,7 +369,7 @@ export class PromotionComponent {
           this.membersData = data['table3'];
           let summary = data['table4'];
 
-          console.log(data)
+
 
           badgeData.forEach(element => {
             let x = { "id": element.id, "badgeName": element.name, "counts": element.count.toString(), "checked": false };
@@ -482,7 +491,6 @@ export class PromotionComponent {
       "badgeIDs": badgeIDs,
       "tagIDs": tagIDs
     }
-    console.log(details);
     this._memberservice.GetMembersDataForPromotion(details).pipe()
       .subscribe({
         next: async (data) => {
@@ -507,7 +515,6 @@ export class PromotionComponent {
         }
       });
   }
-
   selectAllBadges() {
     if (this.isAllBadgeChecked) {
       this.isAllBadgeChecked = false;
@@ -520,7 +527,6 @@ export class PromotionComponent {
     this.onMembersOfSelected();
     this.BadgeTagForSummary();
   }
-
   onBadgeSelected(id: number) {
     if (this.badgeDataForStep3.filter(x => x.id == id)[0].checked) {
       this.badgeDataForStep3.filter(x => x.id == id)[0].checked = false;
@@ -612,13 +618,11 @@ export class PromotionComponent {
     await this.ClearForEdit();
     await this.GetMembersData();
 
-    let length: any = this.packageDetails.isMMS == true ? 1200 : 145;
+    let length: any = 1200;
     this.firstFormGroup.controls['promotionalMessage1'].reset();
     this.firstFormGroup.controls['promotionalMessage1'].enable();
     this.firstFormGroup.controls['promotionalMessage1'].setValidators([Validators.required]);
     this.firstFormGroup.controls['promotionalMessage2'].reset();
-    this.firstFormGroup.controls['occasion'].reset();
-    this.firstFormGroup.controls['occasion'].setValidators([Validators.required, Validators.maxLength(length)]);
 
     this._promotionService.GetPromotionByID(id).pipe()
       .subscribe({
@@ -630,7 +634,7 @@ export class PromotionComponent {
             isWordOfMouth1: [data.isWordOfMouth],
             isWordOfMouth2: [false],
             occasion: [data.occasion, Validators.compose([Validators.required, Validators.maxLength(length)])],
-            occasionHTML: [data.occasionHTML],
+            occasionHTML: [data.occasion],
             offerStartDate: ['', Validators.required],
             offerEndDate: ['', Validators.required],
             isSendSoon: [data.isSendSoon, Validators.required],
@@ -768,6 +772,22 @@ export class PromotionComponent {
         }
       });
   }
+  async GetLastSMSDetails() {
+    this._memberservice.GetLastSMSDetails().pipe()
+      .subscribe({
+        next: async (data) => {
+          console.log(data);
+          this.LatestSMSstatus = "Last SMS Status : " + "Sent To : " + data.toNumber + " Sent on : " + data.created_at + " UTC";
+          this.LatestSMSstatus2 = "delivery_status : " + data.delivery_status + " StatusCode : " + data.statusCode;
+          this.SMSStatus = (data.delivery_status == "40002" || data.delivery_status == "40003") ? "delivery_Failed" : "delivered";
+        },
+        error: error => {
+          this.LatestSMSstatus = "";
+          this.LatestSMSstatus2 = "";
+          this.SMSStatus = "";
+        }
+      });
+  }
 
   async CreatePromotion() {
     if (this.iseditmode) {
@@ -827,7 +847,7 @@ export class PromotionComponent {
     }
     else if (control == "occasion") {
       let text: any = this.editor.textArea.nativeElement.innerText;
-      this.descriptionCharacterCount = (this.packageDetails.isMMS == true ? 1200 : 145) - (text == "\n" ? 0 : text.length);
+      this.descriptionCharacterCount = (this.packageDetails.isMMS == true ? 1200 : 1200) - (text == "\n" ? 0 : text.length);
       this.firstFormGroup.controls['occasion'].setValue(text == "\n" ? '' : text);
     }
     await this.getRewardstring();
@@ -847,7 +867,19 @@ export class PromotionComponent {
         if (valueCheckspromotionalMessage1.includes(element.text.toLowerCase())) {
           this.isValidPromoMSG1 = true;
           this.isValidPromoMSG1MSG = "Hey!!! A " + element.reward + "" + " Reward has been detected. "
-          if (element.reward == 'beverages') {
+          if (element.reward == 'bring a friend') {
+            let x = checkwordspromotionalMessage1;
+            var indexstart = checkwordspromotionalMessage1.indexOf("$");
+            let setstring = "";
+            if (indexstart >= 0) {
+              let localstring = checkwordspromotionalMessage1.substring(indexstart, checkwordspromotionalMessage1.length);
+              let indexend = localstring.indexOf(' ');
+              let setstring = localstring.substring(0, indexend);
+            }
+            this.messageString1 += "1: Bring a friend and get " + setstring + " reward!";
+            break;
+          }
+          else if (element.reward == 'beverages') {
             let setstring = "Offer on your favorite beverages!";
             this.messageString1 += "1: " + setstring;
             break;
@@ -898,9 +930,21 @@ export class PromotionComponent {
         if (valueCheckspromotionalMessage2.includes(element.text.toLowerCase())) {
           this.isValidPromoMSG2 = true;
           this.isValidPromoMSG2MSG = "Hey!!! A " + element.reward + "" + " Reward has been detected. "
-          if (element.reward == 'beverages') {
+          if (element.reward == 'bring a friend') {
+            let x = checkwordspromotionalMessage2;
+            var indexstart = checkwordspromotionalMessage2.indexOf("$");
+            let setstring = "";
+            if (indexstart >= 0) {
+              let localstring = checkwordspromotionalMessage2.substring(indexstart, checkwordspromotionalMessage2.length);
+              let indexend = localstring.indexOf(' ');
+              setstring = localstring.substring(0, indexend);
+            }
+            this.messageString2 += "2: Bring a friend and get " + setstring + " reward!";
+            break;
+          }
+          else if (element.reward == 'beverages') {
             let setstring = "Offer on your favorite beverages!";
-            this.messageString1 += "2: " + setstring;
+            this.messageString2 += "2: " + setstring;
             break;
           }
           else if (element.reward == '$ off') {
@@ -949,7 +993,19 @@ export class PromotionComponent {
         if (valueCheckspromotionalMessage1.includes(element.text.toLowerCase())) {
           this.isValidPromoMSG1 = true;
           this.isValidPromoMSG1MSG = "Hey!!! A " + element.reward + "" + " Reward has been detected. "
-          if (element.reward == 'beverages') {
+          if (element.reward == 'bring a friend') {
+            let x = checkwordspromotionalMessage1;
+            var indexstart = checkwordspromotionalMessage1.indexOf("$");
+            let setstring = "";
+            if (indexstart >= 0) {
+              let localstring = checkwordspromotionalMessage1.substring(indexstart, checkwordspromotionalMessage1.length);
+              let indexend = localstring.indexOf(' ');
+              setstring = localstring.substring(0, indexend);
+            }
+            this.messageString = this.businessGroupID.businessGroupName + " sent you a Bring a friend and get " + setstring + " reward!";
+            break;
+          }
+          else if (element.reward == 'beverages') {
             let setstring = "Offer on your favorite beverages!";
             this.messageString1 = this.businessGroupID.businessGroupName + " sent you an " + setstring;
             break;
@@ -1035,7 +1091,6 @@ export class PromotionComponent {
           this.ClearControlandView();
         },
         error: error => {
-          console.log(error);
           this.isLoadingSaveData = false;
           this.isLoading = false;
           this.submitted = false;
@@ -1095,7 +1150,7 @@ export class PromotionComponent {
         "fileContentType": this.file != null && this.file != undefined ? this.file.type : "",
         "filePath": AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + this.fileName,
         "stateID": 3,
-        "promotionReferenceID" : 0,
+        "promotionReferenceID": 0,
         "promotionalDetails": this.GetPromotionDetails(),
         "spinWheelConfiguration": isSpinWheel1 == true ? this.GetSpinWheelDetails() : [],
         "locationwisePromotionRedemption": this.GetRedemptionDetails()
@@ -1132,7 +1187,7 @@ export class PromotionComponent {
         "fileContentType": this.file != null && this.file != undefined ? this.file.type : "",
         "filePath": AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + this.fileName,
         "stateID": 3,
-        "promotionReferenceID" : 0,
+        "promotionReferenceID": 0,
         "promotionalDetails": this.GetPromotionDetails(),
         "spinWheelConfiguration": isSpinWheel2 == true ? this.GetSpinWheelDetails() : [],
         "locationwisePromotionRedemption": this.GetRedemptionDetails()
@@ -1303,7 +1358,7 @@ export class PromotionComponent {
     }
     else if (this.firstFormGroup.controls['isSpinWheelAllowed1'].value == false) {
       this.firstFormGroup.controls['isSpinWheelAllowed2'].enable();
-      if(this.firstFormGroup.controls['promotionalMessage1'].value == "Spin wheel available at store"){
+      if (this.firstFormGroup.controls['promotionalMessage1'].value == "Spin wheel available at store") {
         this.firstFormGroup.controls['promotionalMessage1'].setValue('')
       }
       this.firstFormGroup.controls['promotionalMessage1'].enable();
@@ -1318,7 +1373,7 @@ export class PromotionComponent {
     }
     else if (this.firstFormGroup.controls['isSpinWheelAllowed2'].value == false) {
       this.firstFormGroup.controls['isSpinWheelAllowed1'].enable();
-      if(this.firstFormGroup.controls['promotionalMessage2'].value == "Spin wheel available at store"){
+      if (this.firstFormGroup.controls['promotionalMessage2'].value == "Spin wheel available at store") {
         this.firstFormGroup.controls['promotionalMessage2'].setValue('')
       }
       this.firstFormGroup.controls['promotionalMessage2'].enable();
@@ -1369,27 +1424,43 @@ export class PromotionComponent {
   onUpload() {
     if (this.file) {
       this.loadingLoading = true;
-      this.uploadSub = this._promotionService.uploadFile(this.file).subscribe((event: any) => {
-        if (event.type == HttpEventType.UploadProgress) {
-          this.uploadProgress = Math.round(100 * (event.loaded / event.total)).toString() + "%";
-        }
-        if (event.partialText != undefined && event.partialText.split('|')[0] == "file uploaded") {
-          this.loadingLoading = false; // Flag variable
-          this.isfileUploaded = true;
-          this.annImage = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + this.file.name;
-          let array = event.partialText.split('|')[1].split('\\');
-          this.fileName = array[array.length - 1];
-          this.filePath = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + this.fileName;
-        } else {
-          this.loadingLoading = false;
-          this.isfileUploaded = false;
-        }
-      });
+      this.uploadSub = this._promotionService.uploadPromotionalfile(this.file).pipe()
+        .subscribe({
+          next: (event: any) => {
+            console.log("This is on upload event:- ", event);
+            if (event.type == HttpEventType.UploadProgress) {
+              this.uploadProgress = Math.round(100 * (event.loaded / event.total)).toString() + "%";
+            }
+            if (event.partialText != undefined && event.partialText.split('|')[0] == "file uploaded") {
+              this.loadingLoading = false; // Flag variable
+              this.isfileUploaded = true;
+              this.annImage = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + this.file.name;
+              let array = event.partialText.split('|')[1].split('\\');
+              this.fileName = array[array.length - 1];
+              this.filePath = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + this.fileName;
+            } else {
+              this.loadingLoading = false;
+              this.isfileUploaded = false;
+            }
+          },
+          error: error => {
+            console.log("This is on upload error", error);
+            this.errorMessage = error.error;
+            this.modalService.open(this.errorMessage, {
+              animation:true,
+              size:'lg',
+              centered:true,
+            });
+            this.cancelUpload();
+          }
+        });
     }
     this.loadingLoading = false;
   }
   cancelUpload() {
-    this.uploadSub.unsubscribe();
+    if (this.uploadSub != null) {
+      this.uploadSub.unsubscribe();
+    }
     this.uploadProgress = "0%";
     this.isfileUploaded = false;
     this.fileName = "";
@@ -1505,8 +1576,7 @@ export class PromotionComponent {
     this.isLoadingSaveData = true;
     let model = this.createModel();
     model[0].stateID = 2;
-    if(model.length > 1)
-    {
+    if (model.length > 1) {
       model[1].stateID = 2;
     }
     // 
@@ -1522,7 +1592,6 @@ export class PromotionComponent {
           this.buttonname = "Resume Editing";
         },
         error: error => {
-          console.log(error);
           this.isLoadingSaveData = false;
           this.isLoading = false;
           this.submitted = false;
@@ -1538,7 +1607,7 @@ export class PromotionComponent {
             this.draftPromo = [];
           },
           error: error => {
-            console.log(error);
+
           }
         });
     }

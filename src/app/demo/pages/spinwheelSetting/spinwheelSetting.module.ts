@@ -14,6 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import {MatTabsModule} from '@angular/material/tabs';
 import { SpinwheelSettingComponent } from './spinwheelSetting.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [SpinwheelSettingComponent],

@@ -8,7 +8,6 @@ import { ClaimRevordsComponent } from './demo/pages/claim-revords/claim-revords.
 import ResetPasswordComponent from './demo/pages/authentication/resetPassword/resetPassword.component';
 import { AppLinksComponent } from './demo/pages/applinks/applinks.component';
 import { UnSubscribeEmailComponent } from './demo/pages/unsubscribeEmail/unsubscribeEmail.component';
-import { TexttojoinComponent } from './demo/pages/texttojoin/texttojoin.component';
 
 const routes: Routes = [
   {
@@ -59,6 +58,12 @@ const routes: Routes = [
         data: { preload: true, loadAfterSeconds: 2 },
         loadChildren: () =>
           import('./demo/pages/tag-definition/tagdefinition.module').then((m) => m.TagdefinitionModule)
+      },
+      {
+        path: 'spinwheelSetting',
+        data: { preload: true, loadAfterSeconds: 2 },
+        loadChildren: () =>
+          import('./demo/pages/spinwheelSetting/spinwheelSetting.module').then((m) => m.SpinwheelSettingModule)
       },
       {
         path: 'activity',
@@ -149,11 +154,6 @@ const routes: Routes = [
         path: 'App',
         loadChildren: () =>
           import('./demo/pages/applinks/applinks.routing-module').then((m) => m.AppLinksRoutingModule)
-      },
-      {
-        path: 'texttojoin',
-        loadChildren: () =>
-          import('./demo/pages/texttojoin/texttojoin-routing.module').then((m) => m.TexttojoinRoutingModule)
       }
     ]
   },

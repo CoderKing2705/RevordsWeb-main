@@ -21,7 +21,6 @@ export class StateService {
                 return member;
             }));
     }
-
     public GetStates() {
         return this._http.get<any>(this.apiUrl).pipe();
     }

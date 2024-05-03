@@ -449,9 +449,9 @@
                                                             </div>
                                                             <div>
                                                                 <button class="btn btn-success buttonColor"
-                                                                    *ngIf="!uploadProgress">
+                                                                    *ngIf="!uploadProgress" (click)="onUpload()">
                                                                     Upload
-                                                                    <mat-icon class="filter-green" (click)="onUpload()"
+                                                                    <mat-icon class="filter-green"
                                                                         style="margin-bottom: -6px;margin-left: 6px;">
                                                                         cloud_upload
                                                                     </mat-icon></button>
@@ -462,6 +462,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                     <div class="progress">
                                                         <div class="progress-bar bluecolor" role="progressbar"
                                                             [style.width]="uploadProgress"
@@ -1413,7 +1414,7 @@
                                                     <b>Redeemable At : </b>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <ng-multiselect-dropdown placeholder="Choose RedemptionAt"
+                                                    <ng-multiselect-dropdown placeholder="Choose Redeemable At"
                                                         (onSelect)="onRedemptionOptionChanged()"
                                                         (onSelectAll)="onRedemptionOptionChanged()"
                                                         formControlName="RedemptionAt"
@@ -2164,6 +2165,15 @@
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top:5px;">
+                                            <div class="col-md-12">
+                                                <h4>{{LatestSMSstatus}} </h4>
+
+                                                <h5> <span
+                                                        [ngClass]="(SMSStatus == 'delivered' || SMSStatus == 'sent') ? 'greendot' : 'reddot' "
+                                                        [class]="greendot"></span>{{LatestSMSstatus2}}</h5>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:5px;">
                                             <div class="col-md-2">
                                                 <button matStepperPrevious class="btn btn-dark flexcenter">
                                                     <img alt="phonevector" class="filter-green mr3"
@@ -2179,6 +2189,7 @@
                                             </div>
                                             <div class="col-md-6"></div>
                                         </div>
+
                                     </div>
                                     <div class="col-md-4"
                                         style="border:1px solid #DADCDC;border-radius: 15px; height: 826px;">
@@ -2382,7 +2393,7 @@
         <div class="col-md-12" style="display: inline-flex;align-items: center;justify-content: center;">
             <div class="col-md-3"></div>
             <!-- <div class="col-md-2"> -->
-                <!-- <button class="btn btn-success text-center" (click)="DraftSave()">
+            <!-- <button class="btn btn-success text-center" (click)="DraftSave()">
                     Yes
                 </button> -->
             <!-- </div> -->

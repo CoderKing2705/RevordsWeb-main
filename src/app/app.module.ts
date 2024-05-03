@@ -82,7 +82,6 @@ import { UserService } from './services/UserService';
 import { SourcesComponent } from './demo/pages/Sources/Sources.component';
 import { AdminPanelComponent } from './demo/pages/admin-panel/admin-panel.component';
 import { BusinessProfileComponent } from './demo/pages/BusinessProfile/BusinessProfile.component';
-import { TexttojoinComponent } from './demo/pages/texttojoin/texttojoin.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
@@ -113,7 +112,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
     SourcesComponent,
     AdminPanelComponent,
     BusinessProfileComponent,
-    TexttojoinComponent
   ],
   imports: [BrowserModule, AppRoutingModule, SharedModule, BrowserAnimationsModule, FormsModule,
     ReactiveFormsModule,
@@ -161,7 +159,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
       positionClass: 'toast-bottom-right'
     }),
     GoogleMapsModule],
-
   exports: [
     MatAutocompleteModule,
     MatChipsModule,

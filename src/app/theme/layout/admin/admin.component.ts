@@ -113,6 +113,7 @@ export class AdminComponent implements OnInit {
     localStorage.removeItem('selectedBusiness');
     localStorage.removeItem('Business');
     localStorage.removeItem('BusinessGroup');
+    localStorage.removeItem('OPTS');
     localStorage.removeItem('UserData');
     this._Route.navigate(['login']);
     // this.currentUserSubject.next(null);

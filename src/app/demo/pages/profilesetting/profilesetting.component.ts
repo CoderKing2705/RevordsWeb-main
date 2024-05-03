@@ -197,7 +197,7 @@ export class ProfilesettingComponent {
     }
     this.uploadProgressBusinessLogo = "0%";
     this.isfileUploadedBusinessLogo = false;
-    this.fileNameBusinessLogo = 'Upload Image (Upto 1 MB)';
+    this.fileNameBusinessLogo = null;
     this.resetBusinessLogoDetails();
   }
   resetBusinessLogoDetails() {
@@ -241,7 +241,7 @@ export class ProfilesettingComponent {
     }
     this.uploadProgressBusinessDisplayImage = "0%";
     this.isfileUploadedBusinessDisplayImage = false;
-    this.fileNameBusinessDisplayImage = 'Upload Image (Upto 1 MB)';
+    this.fileNameBusinessDisplayImage = null;
     this.resetBusinessDisplayImageDetails();
   }
 
@@ -286,7 +286,7 @@ export class ProfilesettingComponent {
     }
     this.uploadProgressBusinessImage1 = "0%";
     this.isfileUploadedBusinessImage1 = false;
-    this.fileNameBusinessImage1 = 'Upload Image (Upto 1 MB)';
+    this.fileNameBusinessImage1 = null;
     this.resetBusinessImage1Details();
   }
 
@@ -330,7 +330,7 @@ export class ProfilesettingComponent {
     }
     this.uploadProgressBusinessImage2 = "0%";
     this.isfileUploadedBusinessImage2 = false;
-    this.fileNameBusinessImage2 = 'Upload Image (Upto 1 MB)';
+    this.fileNameBusinessImage2 = null;
     this.resetBusinessImage2Details();
   }
 
@@ -374,7 +374,7 @@ export class ProfilesettingComponent {
     }
     this.uploadProgressBusinessImage3 = "0%";
     this.isfileUploadedBusinessImage3 = false;
-    this.fileNameBusinessImage3 = 'Upload Image (Upto 1 MB)';
+    this.fileNameBusinessImage3 = null;
     this.resetBusinessImage3Details();
   }
 
@@ -418,7 +418,7 @@ export class ProfilesettingComponent {
     }
     this.uploadProgressBusinessImage4 = "0%";
     this.isfileUploadedBusinessImage4 = false;
-    this.fileNameBusinessImage4 = 'Upload Image (Upto 1 MB)';
+    this.fileNameBusinessImage4 = null;
     this.resetBusinessImage4Details();
   }
 
@@ -458,7 +458,6 @@ export class ProfilesettingComponent {
   Edit(e) {
     this.profileSettingService.GetBusinessProfilesByID(e.id).subscribe({
       next: (data: any) => {
-        console.log("This is my data", data);
         this.businessLocationID = e.id;
         this.latitude = data.latitude;
         this.longitude = data.longitude;
@@ -484,37 +483,107 @@ export class ProfilesettingComponent {
         this.ProfileFormGroup.controls['googleUrl'].setValue(data.googleUrl);
         this.ProfileFormGroup.controls['instagramUrl'].setValue(data.instagramUrl);
         this.ProfileFormGroup.controls['yelpUrl'].setValue(data.yelpUrl);
-        this.ProfileFormGroup.controls['monFromTime'].setValue(new Date(data.businesswiseWorkingDays[0].monFromTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].monFromTime).getMinutes());
-        this.ProfileFormGroup.controls['monToTime'].setValue(new Date(data.businesswiseWorkingDays[0].monToTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].monToTime).getMinutes());
-        this.ProfileFormGroup.controls['tueFromTime'].setValue(new Date(data.businesswiseWorkingDays[0].tueFromTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].tueFromTime).getMinutes());
-        this.ProfileFormGroup.controls['tueToTime'].setValue(new Date(data.businesswiseWorkingDays[0].tueToTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].tueToTime).getMinutes());
-        this.ProfileFormGroup.controls['wedFromTime'].setValue(new Date(data.businesswiseWorkingDays[0].wedFromTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].wedFromTime).getMinutes());
-        this.ProfileFormGroup.controls['wedToTime'].setValue(new Date(data.businesswiseWorkingDays[0].wedToTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].wedToTime).getMinutes());
-        this.ProfileFormGroup.controls['thuFromTime'].setValue(new Date(data.businesswiseWorkingDays[0].thuFromTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].thuFromTime).getMinutes());
-        this.ProfileFormGroup.controls['thuToTime'].setValue(new Date(data.businesswiseWorkingDays[0].thuToTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].thuToTime).getMinutes());
-        this.ProfileFormGroup.controls['friFromTime'].setValue(new Date(data.businesswiseWorkingDays[0].friFromTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].friFromTime).getMinutes());
-        this.ProfileFormGroup.controls['friToTime'].setValue(new Date(data.businesswiseWorkingDays[0].friToTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].friToTime).getMinutes());
-        this.ProfileFormGroup.controls['satFromTime'].setValue(new Date(data.businesswiseWorkingDays[0].satFromTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].satFromTime).getMinutes());
-        this.ProfileFormGroup.controls['satToTime'].setValue(new Date(data.businesswiseWorkingDays[0].satToTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].satToTime).getMinutes());
-        this.ProfileFormGroup.controls['sunFromTime'].setValue(new Date(data.businesswiseWorkingDays[0].sunFromTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].sunFromTime).getMinutes());
-        this.ProfileFormGroup.controls['sunToTime'].setValue(new Date(data.businesswiseWorkingDays[0].sunToTime).getHours() + ':' +
-          new Date(data.businesswiseWorkingDays[0].sunToTime).getMinutes());
+
+        let monFrom = ((new Date(data.businesswiseWorkingDays[0].monFromTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].monFromTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].monFromTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].monFromTime).getMinutes()));
+        this.ProfileFormGroup.controls['monFromTime'].setValue(monFrom);
+
+        let monTo = ((new Date(data.businesswiseWorkingDays[0].monToTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].monToTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].monToTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].monToTime).getMinutes()));
+        this.ProfileFormGroup.controls['monToTime'].setValue(monTo);
+
+        let tueFrom = ((new Date(data.businesswiseWorkingDays[0].tueFromTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].tueFromTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].tueFromTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].tueFromTime).getMinutes()));
+        this.ProfileFormGroup.controls['tueFromTime'].setValue(tueFrom);
+
+        let tueTo = ((new Date(data.businesswiseWorkingDays[0].tueToTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].tueToTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].tueToTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].tueToTime).getMinutes()));
+        this.ProfileFormGroup.controls['tueToTime'].setValue(tueTo);
+
+        let wedFrom = ((new Date(data.businesswiseWorkingDays[0].wedFromTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].wedFromTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].wedFromTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].wedFromTime).getMinutes()));
+        this.ProfileFormGroup.controls['wedFromTime'].setValue(wedFrom);
+
+        let wedTo = ((new Date(data.businesswiseWorkingDays[0].wedToTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].wedToTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].wedToTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].wedToTime).getMinutes()));
+        this.ProfileFormGroup.controls['wedToTime'].setValue(wedTo);
+
+        let thuFrom = ((new Date(data.businesswiseWorkingDays[0].thuFromTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].thuFromTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].thuFromTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].thuFromTime).getMinutes()));
+        this.ProfileFormGroup.controls['thuFromTime'].setValue(thuFrom);
+
+        let thuTo = ((new Date(data.businesswiseWorkingDays[0].thuToTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].thuToTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].thuToTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].thuToTime).getMinutes()));
+        this.ProfileFormGroup.controls['thuToTime'].setValue(thuTo);
+
+        let friFrom = ((new Date(data.businesswiseWorkingDays[0].friFromTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].friFromTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].friFromTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].friFromTime).getMinutes()));
+        this.ProfileFormGroup.controls['friFromTime'].setValue(friFrom);
+
+        let friTo = ((new Date(data.businesswiseWorkingDays[0].friToTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].friToTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].friToTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].friToTime).getMinutes()));
+        this.ProfileFormGroup.controls['friToTime'].setValue(friTo);
+
+        let satFrom = ((new Date(data.businesswiseWorkingDays[0].satFromTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].satFromTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].satFromTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].satFromTime).getMinutes()));
+        this.ProfileFormGroup.controls['satFromTime'].setValue(satFrom);
+
+        let satTo = ((new Date(data.businesswiseWorkingDays[0].satToTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].satToTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].satToTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].satToTime).getMinutes()));
+        this.ProfileFormGroup.controls['satToTime'].setValue(satTo);
+
+        let sunFrom = ((new Date(data.businesswiseWorkingDays[0].sunFromTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].sunFromTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].sunFromTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].sunFromTime).getMinutes()));
+        this.ProfileFormGroup.controls['sunFromTime'].setValue(sunFrom);
+
+        let sunTo = ((new Date(data.businesswiseWorkingDays[0].sunToTime).getHours() < 10 ? '0' : '') +
+          (new Date(data.businesswiseWorkingDays[0].sunToTime).getHours())) + ':' +
+          ((new Date(data.businesswiseWorkingDays[0].sunToTime).getMinutes() < 10 ? '0' : '') +
+            (new Date(data.businesswiseWorkingDays[0].sunToTime).getMinutes()));
+        this.ProfileFormGroup.controls['sunToTime'].setValue(sunTo);
+
         this.iseditmode = true;
 
-        // BusinessLabelID: ['', Validators.required],
+        this.ProfileFormGroup.controls['tueFromTime'].enable();
+        this.ProfileFormGroup.controls['tueToTime'].enable();
+        this.ProfileFormGroup.controls['wedFromTime'].enable();
+        this.ProfileFormGroup.controls['wedToTime'].enable();
+        this.ProfileFormGroup.controls['thuFromTime'].enable();
+        this.ProfileFormGroup.controls['thuToTime'].enable();
+        this.ProfileFormGroup.controls['friFromTime'].enable();
+        this.ProfileFormGroup.controls['friToTime'].enable();
+        this.ProfileFormGroup.controls['satFromTime'].enable();
+        this.ProfileFormGroup.controls['satToTime'].enable();
+        this.ProfileFormGroup.controls['sunFromTime'].enable();
+        this.ProfileFormGroup.controls['sunToTime'].enable();
+        this.ChkMakeDefaultTime = false;
+
         let labels = this.GetBusinessLabelsForEdit(data['businesswiseLabels']);
         this.selectedBusiness = [];
         labels.forEach(element => {
@@ -523,6 +592,60 @@ export class ProfilesettingComponent {
             name: this.businessLabels.filter(x => x.id == element.labelID)[0].name
           })
         });
+
+        if (data.logoPath != '' && data.logoPath != null && data.logoPath != undefined) {
+          this.filePathBusinessLogo = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + data.logoPath;
+          this.uploadProgressBusinessLogo = (100).toString() + "%";
+          this.fileNameBusinessLogo = data.logoPath;
+        }
+        else {
+          this.cancelUploadBusinessLogo();
+        }
+
+        if (data.imagePath != '' && data.imagePath != null && data.imagePath != undefined) {
+          this.filePathBusinessDisplayImage = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + data.imagePath;
+          this.uploadProgressBusinessDisplayImage = (100).toString() + "%";
+          this.fileNameBusinessDisplayImage = data.imagePath;
+        }
+        else {
+          this.cancelUploadBusinessDisplayImage();
+        }
+
+        if (data.galleryImagePath1 != '' && data.galleryImagePath1 != null && data.galleryImagePath1 != undefined) {
+          this.filePathBusinessImage1 = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + data.galleryImagePath1;
+          this.uploadProgressBusinessImage1 = (100).toString() + "%";
+          this.fileNameBusinessImage1 = data.galleryImagePath1;
+        }
+        else {
+          this.cancelUploadBusinessImage1();
+        }
+
+        if (data.galleryImagePath2 != '' && data.galleryImagePath2 != null && data.galleryImagePath2 != undefined) {
+          this.filePathBusinessImage2 = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + data.galleryImagePath2;
+          this.uploadProgressBusinessImage2 = (100).toString() + "%";
+          this.fileNameBusinessImage2 = data.galleryImagePath2;
+        }
+        else {
+          this.cancelUploadBusinessImage2();
+        }
+
+        if (data.galleryImagePath3 != '' && data.galleryImagePath3 != null && data.galleryImagePath3 != undefined) {
+          this.filePathBusinessImage3 = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + data.galleryImagePath3;
+          this.uploadProgressBusinessImage3 = (100).toString() + "%";
+          this.fileNameBusinessImage3 = data.galleryImagePath3;
+        }
+        else {
+          this.cancelUploadBusinessImage3();
+        }
+
+        if (data.galleryImagePath4 != '' && data.galleryImagePath4 != null && data.galleryImagePath4 != undefined) {
+          this.filePathBusinessImage4 = AppSettings.API_ENDPOINT + AppSettings.Root_ENDPOINT + "/" + data.galleryImagePath4;
+          this.uploadProgressBusinessImage4 = (100).toString() + "%";
+          this.fileNameBusinessImage4 = data.galleryImagePath4;
+        }
+        else {
+          this.cancelUploadBusinessImage4();
+        }
       },
       error: (error: any) => {
 
@@ -718,7 +841,6 @@ export class ProfilesettingComponent {
     this.profileSettingService.PutBusinessProfile(details.id, details)
       .subscribe({
         next: (data) => {
-          console.log("In_bc")
           this.isLoading = false;
           this.submitted = false;
           this.iseditmode = false;
