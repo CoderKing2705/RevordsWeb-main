@@ -239,6 +239,7 @@ export class SpinwheelSettingComponent {
         localStorage.removeItem('OPTS');
         this.toastService.showSuccess('Changed Successfully!');
         this.GetSpinWheeldefaultConfigByBusinessGroupID();
+        this.isLoading = false;
       },
       error: (error) => {
         this.isLoading = false;
